@@ -1,0 +1,4 @@
+load_from:
+  - python_module: data_platform
+  - python_module: sales
+  - python_module: marketing
