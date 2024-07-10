@@ -1,4 +1,6 @@
-from dagster import asset, MaterializeResult, asset_check, AssetCheckResult, AssetsDefinition, build_freshness_checks_for_non_partitioned_assets
+from datetime import timedelta
+
+from dagster import asset, MaterializeResult, asset_check, AssetCheckResult, AssetsDefinition, build_last_update_freshness_checks
 import pandas as pd
 import data_platform.constants as constants
 import random
@@ -430,9 +432,6 @@ type_checks = [
     generate_asset_check(asset, "valid_type") for asset in data_products
 ]
 
-
-freshness_checks = build_freshness_checks_for_non_partitioned_assets(
-    assets=data_products,
-    freshness_cron="0 0 * * *",
-    maximum_lag_minutes=60 * 24
+freshness_checks = build_last_update_freshness_checks(
+    assets=data_products, lower_bound_delta=timedelta(hours=2)
 )
